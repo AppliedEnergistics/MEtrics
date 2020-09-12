@@ -23,3 +23,14 @@ task testApiOnly(type: Test, group: "verification") {
 }
 
 check.dependsOn(testApiOnly)
+
+/**
+ * Tell IntelliJ that the apionly source set is actually a test source set
+ */
+apply plugin: 'idea'
+idea {
+    module {
+        testSourceDirs += project.sourceSets.apionly.java.srcDirs
+        testSourceDirs += project.sourceSets.apionly.resources.srcDirs
+    }
+}

@@ -19,7 +19,7 @@ public final class Metrics {
                 Class<?> apiBindingClass = Class.forName("io.github.appliedenergistics.metrics.core.ApiBinding");
                 checkSupportedApiVersion(apiBindingClass);
 
-                Method createRegistryMethod = apiBindingClass.getMethod("createRegistry");
+                Method createRegistryMethod = apiBindingClass.getMethod("getRegistry");
                 return (MeterRegistry) createRegistryMethod.invoke(null);
             } catch (ClassNotFoundException ignored) {
                 System.out.println("Loading a no-op Metrics backend since the metrics mod is not present.");

@@ -1,7 +1,6 @@
 package io.github.appliedenergistics.metrics.core;
 
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 
 /**
  * This class is loaded by  {@link io.github.appliedenergistics.metrics.api.Metrics} via
@@ -16,8 +15,8 @@ public final class ApiBinding {
         return version == 1;
     }
 
-    public static MeterRegistry createRegistry() {
-        return new SimpleMeterRegistry();
+    public static MeterRegistry getRegistry() {
+        return SharedRegistry.registry();
     }
 
 }

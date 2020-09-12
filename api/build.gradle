@@ -7,3 +7,10 @@ dependencies {
 shadowJar {
     minimize()
 }
+
+artifacts {
+    archives(shadowJar) {
+        classifier 'shadow'
+        builtBy shadowJar
+    }
+}
