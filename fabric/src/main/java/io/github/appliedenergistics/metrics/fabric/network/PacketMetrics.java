@@ -1,21 +1,28 @@
 package io.github.appliedenergistics.metrics.fabric.network;
 
+import com.google.common.collect.ImmutableMap;
 import io.github.appliedenergistics.metrics.core.SharedRegistry;
-import io.github.appliedenergistics.metrics.fabric.mixin.network.BlockEntityUpdateS2CPacketAccessor;
 import io.github.appliedenergistics.metrics.fabric.mixin.network.CustomPayloadC2SPacketAccessor;
 import io.github.appliedenergistics.metrics.fabric.mixin.network.CustomPayloadS2CPacketAccessor;
 import io.micrometer.core.instrument.DistributionSummary;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PacketMetrics {
+
+    public static final Identifier ID_NONE = new Identifier("metrics:none");
+
+    public static final Identifier ID_ERROR = new Identifier("metrics:error");
+
+    public static final Identifier ID_UNIDENTIFIABLE = new Identifier("metrics:unidentifiable");
 
     private static final String METRIC_PACKETS_RECEIVED = "minecraft.packets.received";
 
@@ -29,15 +36,43 @@ public class PacketMetrics {
 
     private static final Map<Identifier, DistributionSummary> outgoingModdedTypeMetrics = new ConcurrentHashMap<>();
 
-    private static final Map<String, DistributionSummary> outgoingBeTypeUpdateMetrics = new ConcurrentHashMap<>();
+    private static final Map<Identifier, DistributionSummary> outgoingBeTypeUpdateMetrics = new ConcurrentHashMap<>();
 
     private static final Map<Class<?>, DistributionSummary> incomingVanillaTypeMetrics = new ConcurrentHashMap<>();
 
     private static final Map<Identifier, DistributionSummary> incomingModdedTypeMetrics = new ConcurrentHashMap<>();
 
-    private static final Map<String, DistributionSummary> incomingBeTypeUpdateMetrics = new ConcurrentHashMap<>();
+    private static final Map<Identifier, DistributionSummary> incomingBeTypeUpdateMetrics = new ConcurrentHashMap<>();
+
+    public static void recordIncomingBlockEntityUpdate(BlockEntity blockEntity, BlockEntityUpdateS2CPacket packet) {
+        int uncompressedSize = ((PacketSize) packet).metrics_getUncompressedSize();
+        Identifier id = getBlockEntityId(blockEntity);
+        incomingBeTypeUpdateMetrics
+                .computeIfAbsent(id, PacketMetrics::createIncomingBeTypeMetric)
+                .record(uncompressedSize);
+    }
+
+    public static Identifier getBlockEntityId(BlockEntity blockEntity) {
+        if (blockEntity == null) {
+            return ID_NONE;
+        } else {
+            try {
+                Identifier id = Registry.BLOCK_ENTITY_TYPE.getId(blockEntity.getType());
+                if (id == null) {
+                    return ID_UNIDENTIFIABLE;
+                }
+                return id;
+            } catch (Throwable t) {
+                return ID_ERROR;
+            }
+        }
+    }
 
     public static void recordOutgoing(Packet<?> packet, int uncompressedSize) {
+
+        if (packet instanceof PacketSize) {
+            ((PacketSize) packet).metrics_setUncompressedSize(uncompressedSize);
+        }
 
         DistributionSummary summary;
 
@@ -61,6 +96,15 @@ public class PacketMetrics {
         }
 
         summary.record(uncompressedSize);
+
+        // Additionally, record block entity update types
+        if (packet instanceof BlockEntityTypeHolder) {
+            BlockEntityTypeHolder blockEntityTypeHolder = (BlockEntityTypeHolder) packet;
+            Identifier id = blockEntityTypeHolder.metrics_getBlockEntityTypeId();
+            outgoingBeTypeUpdateMetrics
+                    .computeIfAbsent(id, PacketMetrics::createOutgoingBeTypeMetric)
+                    .record(uncompressedSize);
+        }
     }
 
     /**
@@ -85,6 +129,11 @@ public class PacketMetrics {
     };
 
     public static void recordIncoming(Packet<?> packet, int uncompressedSize) {
+        // Record the current packet size in case later handlers can get a more detailed sub-type
+        if (packet instanceof PacketSize) {
+            ((PacketSize) packet).metrics_setUncompressedSize(uncompressedSize);
+        }
+
         DistributionSummary summary;
         if (packet instanceof CustomPayloadS2CPacket) {
             // Since we're in the _encoder_, we assume that the identifier is set since this should be serverbound
@@ -106,29 +155,6 @@ public class PacketMetrics {
         }
 
         summary.record(uncompressedSize);
-
-        // Additionally, record block entity update types
-        if (packet instanceof BlockEntityUpdateS2CPacket) {
-            BlockEntityUpdateS2CPacketAccessor beUpdate = (BlockEntityUpdateS2CPacketAccessor) packet;
-            int beTypeRawId = beUpdate.metrics_getBlockEntityType();
-            String id;
-            if (beTypeRawId < VANILLA_BE_TYPES.length) {
-                id = VANILLA_BE_TYPES[beTypeRawId];
-            } else if (beTypeRawId == 127) {
-                // Raw id used by Fabric
-                CompoundTag tag = beUpdate.metrics_getTag();
-                if (tag == null) {
-                    id = "unknown_" + beTypeRawId;
-                } else {
-                    id = tag.getString("id");
-                }
-            } else {
-                id = "unknown_" + beTypeRawId;
-            }
-            incomingBeTypeUpdateMetrics
-                    .computeIfAbsent(id, PacketMetrics::createIncomingBeTypeMetric)
-                    .record(uncompressedSize);
-        }
     }
 
     private static DistributionSummary createIncomingMetric(Identifier channelId) {
@@ -136,11 +162,11 @@ public class PacketMetrics {
     }
 
     private static DistributionSummary createIncomingMetric(Class<?> packetClass) {
-        return createMetric(METRIC_PACKETS_RECEIVED, packetClass.getSimpleName());
+        return createMetric(METRIC_PACKETS_RECEIVED, VanillaPacketTypes.getName(packetClass));
     }
 
-    private static DistributionSummary createIncomingBeTypeMetric(String type) {
-        return createIdentifierMetric(METRIC_BE_UPDATES_RECEIVED, type);
+    private static DistributionSummary createIncomingBeTypeMetric(Identifier typeId) {
+        return createIdentifierMetric(METRIC_BE_UPDATES_RECEIVED, typeId);
     }
 
     private static DistributionSummary createOutgoingMetric(Identifier channelId) {
@@ -148,28 +174,20 @@ public class PacketMetrics {
     }
 
     private static DistributionSummary createOutgoingMetric(Class<?> packetClass) {
-        return createMetric(METRIC_PACKETS_SENT, packetClass.getSimpleName());
+        return createMetric(METRIC_PACKETS_SENT, VanillaPacketTypes.getName(packetClass));
     }
 
-    private static DistributionSummary createOutgoingBeTypeMetric(String type) {
-        return createIdentifierMetric(METRIC_BE_UPDATES_SENT, type);
+    private static DistributionSummary createOutgoingBeTypeMetric(Identifier typeId) {
+        return createIdentifierMetric(METRIC_BE_UPDATES_SENT, typeId);
     }
 
-    private static DistributionSummary createIdentifierMetric(String metricName, String serializedId) {
-        String mod;
-        int endOfMod = serializedId.indexOf(':');
-        if (endOfMod > 0) {
-            mod = serializedId.substring(0, endOfMod);
-        } else {
-            mod = "minecraft";
-        }
-
+    private static DistributionSummary createIdentifierMetric(String metricName, Identifier id) {
         return DistributionSummary
                 .builder(metricName) //
                 .baseUnit("byte") //
                 .description("Measures the uncompressed size of packets") //
-                .tag("mod", mod) //
-                .tag("type", serializedId) //
+                .tag("mod", id.getNamespace()) //
+                .tag("type", id.toString()) //
                 .register(SharedRegistry.registry());
     }
 
