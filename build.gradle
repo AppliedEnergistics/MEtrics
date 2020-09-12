@@ -1,0 +1,95 @@
+
+plugins {
+    id 'maven-publish'
+    id 'net.minecrell.licenser' version '0.4.1'
+    id 'fabric-loom' version '0.5.25' apply false
+    id 'com.github.johnrengelman.shadow' version '4.0.0' apply false
+}
+
+// Create version number
+ext.pr = System.getenv('PR_NUMBER') ?: ""
+if (ext.pr) {
+    version = version + "+pr." + ext.pr
+}
+
+ext.branch = System.getenv('BRANCH') ?: ""
+if (ext.branch) {
+    version = version + "+branch." + ext.branch
+}
+
+ext.tag = System.getenv('TAG') ?: ""
+if (ext.tag && ext.tag.startsWith("fabric/v")) {
+    version = ext.tag.substring("fabric/v".length())
+    // Validate that the rest is a semver version
+    if (version ==~ /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/) {
+        println("::set-env name=VERSION::${version}")
+    } else {
+        throw new GradleException("Invalid semver: $version")
+    }
+}
+
+// Maven group and artifact name
+group = 'io.github.appliedenergistics'
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+    compileJava {
+        sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+        options.deprecation = false
+    }
+
+    // ensure everything uses UTF-8 and not some random codepage chosen by gradle
+    compileJava.options.encoding = 'UTF-8'
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+}
+
+// configure the maven publication
+publishing {
+    if (!version.endsWith("-SNAPSHOT")) {
+        publications {
+            maven(MavenPublication) {
+                groupId = project.group
+                artifactId = 'appliedenergistics2-fabric'
+                version = project.version
+
+                // add all the jars that should be included when publishing to maven
+                artifact(remapJar) {
+                    builtBy remapJar
+                }
+                artifact(sourcesJar) {
+                    builtBy remapSourcesJar
+                }
+                artifact javadocJar
+                artifact apiJar
+            }
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                username System.getenv("GITHUB_ACTOR")
+                password System.getenv("GITHUB_TOKEN")
+            }
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/AppliedEnergistics/Applied-Energistics-2"
+        }
+        maven {
+            credentials {
+                username System.getenv("MODMAVEN_USER")
+                password System.getenv("MODMAVEN_PASSWORD")
+            }
+            name = "modmaven"
+            url = "https://modmaven.k-4u.nl/artifactory/local-releases/"
+        }
+    }
+
+}

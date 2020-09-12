@@ -1,0 +1,10 @@
+apply plugin: "com.github.johnrengelman.shadow"
+
+dependencies {
+    implementation "io.micrometer:micrometer-core:${micrometer_version}"
+}
+
+shadowJar {
+    minimize()
+    exclude '**/package-info.*'
+}

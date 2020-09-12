@@ -1,0 +1,8 @@
+
+dependencies {
+    implementation project(':api')
+
+    // Micrometer
+    compile "io.micrometer:micrometer-registry-prometheus:${micrometer_version}"
+    compile "io.micrometer:micrometer-registry-influx:${micrometer_version}"
+}
