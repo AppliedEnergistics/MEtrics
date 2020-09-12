@@ -1,4 +1,3 @@
-
 pluginManagement {
     repositories {
         jcenter()
@@ -15,3 +14,4 @@ include 'api'
 include 'core'
 include 'fabric'
 include 'forge'
+include 'api-integration-test'

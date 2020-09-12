@@ -1,0 +1,25 @@
+sourceSets {
+    /**
+     * This source set is supposed to only depend on the shaded API, and nothing else.
+     * It's intended to test from the perspective of a mod that has included the API or
+     * shaded the API into its own jar, and the actual metrics mod is not present.
+     */
+    apionly
+}
+
+dependencies {
+    apionlyImplementation project(path: ':api', configuration: 'shadow')
+    apionlyImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
+}
+
+task testApiOnly(type: Test, group: "verification") {
+    testClassesDirs = sourceSets.apionly.output.classesDirs
+    classpath = sourceSets.apionly.runtimeClasspath
+
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+check.dependsOn(testApiOnly)
