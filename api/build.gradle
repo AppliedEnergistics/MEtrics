@@ -6,6 +6,7 @@ dependencies {
 
 shadowJar {
     minimize()
+    exclude '**/package-info.class'
 }
 
 artifacts {

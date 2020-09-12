@@ -1,4 +1,5 @@
 apply plugin: 'fabric-loom'
+apply plugin: "com.github.johnrengelman.shadow"
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.fabric_minecraft_version}"
@@ -6,4 +7,21 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 
     implementation project(':core')
+    shadow project(':core')
 }
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+}
+
+artifacts {
+    archives(shadowJar) {
+        classifier 'shadow'
+        builtBy shadowJar
+    }
+}
+
+remapJar {
+    getInput().set(shadowJar.getArchivePath());
+}
+remapJar.dependsOn shadowJar

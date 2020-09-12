@@ -22,7 +22,7 @@ import java.nio.file.Path;
 @Mixin(Main.class)
 public class ClientStartupMixin {
 
-    @Inject(method = "main", at = @At(value = "INVOKE", target = "Lnet/minecraft/Bootstrap;initialize()V"), remap = false, locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "main", at = @At(value = "INVOKE", target = "Lnet/minecraft/Bootstrap;initialize()V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void beforeInitialize(String[] args, CallbackInfo ci, OptionParser optionParser) {
         // The client uses this option to determine where the game is
         OptionSpec<File> gameDirArg = optionParser.accepts("gameDir").withRequiredArg().ofType(File.class).defaultsTo(new File("."));

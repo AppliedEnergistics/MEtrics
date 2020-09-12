@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "network.PacketEncoderMixin",
+    "network.DecoderHandlerMixin",
     "network.CustomPayloadS2CPacketAccessor",
     "network.CustomPayloadC2SPacketAccessor"
   ],
