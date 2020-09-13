@@ -90,16 +90,19 @@ subprojects {
                     from components.java
                 }
             }
-            repositories {
-                maven {
-                    credentials {
-                        username System.getenv("GITHUB_ACTOR")
-                        password System.getenv("GITHUB_TOKEN")
-                    }
-                    name = "GitHubPackages"
-                    url = "https://maven.pkg.github.com/AppliedEnergistics/MEtrics"
-                }
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            credentials {
+                username System.getenv("GITHUB_ACTOR")
+                password System.getenv("GITHUB_TOKEN")
             }
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/AppliedEnergistics/MEtrics"
         }
     }
 }
