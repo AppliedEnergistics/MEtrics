@@ -9,7 +9,9 @@
     "network.CustomPayloadS2CPacketAccessor",
     "network.CustomPayloadC2SPacketAccessor",
     "network.BlockEntityUpdateS2CPacketMixin",
-    "network.ServerPlayNetworkHandlerMixin"
+    "network.ServerPlayNetworkHandlerMixin",
+    "network.compression.PacketInflaterMixin",
+    "network.compression.PacketDeflaterMixin"
   ],
   "client": [
     "startup.ClientStartupMixin",

@@ -1,6 +1,8 @@
 apply plugin: 'fabric-loom'
 apply plugin: "com.github.johnrengelman.shadow"
 
+archivesBaseName = 'metrics-fabric'
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.fabric_minecraft_version}"
     mappings "net.fabricmc:yarn:${project.fabric_yarn_mappings}:v2"

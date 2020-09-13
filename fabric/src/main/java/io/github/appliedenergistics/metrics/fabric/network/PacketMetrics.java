@@ -1,6 +1,5 @@
 package io.github.appliedenergistics.metrics.fabric.network;
 
-import com.google.common.collect.ImmutableMap;
 import io.github.appliedenergistics.metrics.core.SharedRegistry;
 import io.github.appliedenergistics.metrics.fabric.mixin.network.CustomPayloadC2SPacketAccessor;
 import io.github.appliedenergistics.metrics.fabric.mixin.network.CustomPayloadS2CPacketAccessor;
@@ -24,9 +23,9 @@ public class PacketMetrics {
 
     public static final Identifier ID_UNIDENTIFIABLE = new Identifier("metrics:unidentifiable");
 
-    private static final String METRIC_PACKETS_RECEIVED = "minecraft.packets.received";
+    private static final String METRIC_PACKETS_RECEIVED = "minecraft.packets.received.payload_size";
 
-    private static final String METRIC_PACKETS_SENT = "minecraft.packets.received";
+    private static final String METRIC_PACKETS_SENT = "minecraft.packets.sent.payload_size";
 
     private static final String METRIC_BE_UPDATES_RECEIVED = "minecraft.be_updates.received";
 
