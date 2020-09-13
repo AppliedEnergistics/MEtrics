@@ -10,15 +10,18 @@ final class VanillaPacketTypes {
     }
 
     /**
-     * We need this map because at runtime, the classnames have been obfuscated/have intermediate names.
-     * Using this map, we can get back nice names.
+     * We need this map because at runtime, the classnames have been obfuscated/have
+     * intermediate names. Using this map, we can get back nice names.
      *
-     * <p>Generate this using the {@link GenerateNicePacketNames} utility in a dev-environment where names are not obfuscated.
+     * <p>
+     * Generate this using the {@link GenerateNicePacketNames} utility in a
+     * dev-environment where names are not obfuscated.
      */
     private static final Map<Class<?>, String> VANILLA_PACKET_NAMES = ImmutableMap.<Class<?>, String>builder()
             .put(net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket.class, "entity_tracker_update")
             .put(net.minecraft.network.packet.s2c.play.TagQueryResponseS2CPacket.class, "tag_query_response")
-            .put(net.minecraft.network.packet.s2c.play.ScoreboardPlayerUpdateS2CPacket.class, "scoreboard_player_update")
+            .put(net.minecraft.network.packet.s2c.play.ScoreboardPlayerUpdateS2CPacket.class,
+                    "scoreboard_player_update")
             .put(net.minecraft.network.packet.s2c.play.PlayerActionResponseS2CPacket.class, "player_action_response")
             .put(net.minecraft.network.packet.s2c.play.BlockBreakingProgressS2CPacket.class, "block_breaking_progress")
             .put(net.minecraft.network.packet.c2s.play.KeepAliveC2SPacket.class, "keep_alive")
@@ -40,13 +43,15 @@ final class VanillaPacketTypes {
             .put(net.minecraft.network.packet.s2c.play.CommandTreeS2CPacket.class, "command_tree")
             .put(net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket.class, "chunk_delta_update")
             .put(net.minecraft.network.packet.c2s.play.QueryBlockNbtC2SPacket.class, "query_block_nbt")
-            .put(net.minecraft.network.packet.c2s.play.CreativeInventoryActionC2SPacket.class, "creative_inventory_action")
+            .put(net.minecraft.network.packet.c2s.play.CreativeInventoryActionC2SPacket.class,
+                    "creative_inventory_action")
             .put(net.minecraft.network.packet.s2c.play.LookAtS2CPacket.class, "look_at")
             .put(net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket.class, "block_entity_update")
             .put(net.minecraft.network.packet.s2c.play.CloseScreenS2CPacket.class, "close_screen")
             .put(net.minecraft.network.packet.c2s.play.ClickWindowC2SPacket.class, "click_window")
             .put(net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket.class, "chat_message")
-            .put(net.minecraft.network.packet.s2c.play.EntityS2CPacket.RotateAndMoveRelative.class, "entity_rotate_and_move_relative")
+            .put(net.minecraft.network.packet.s2c.play.EntityS2CPacket.RotateAndMoveRelative.class,
+                    "entity_rotate_and_move_relative")
             .put(net.minecraft.network.packet.s2c.play.DisconnectS2CPacket.class, "disconnect")
             .put(net.minecraft.network.packet.c2s.play.TeleportConfirmC2SPacket.class, "teleport_confirm")
             .put(net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket.class, "custom_payload")
@@ -54,7 +59,8 @@ final class VanillaPacketTypes {
             .put(net.minecraft.network.packet.s2c.play.WorldEventS2CPacket.class, "world_event")
             .put(net.minecraft.network.packet.s2c.play.SynchronizeTagsS2CPacket.class, "synchronize_tags")
             .put(net.minecraft.network.packet.c2s.play.RecipeBookDataC2SPacket.class, "recipe_book_data")
-            .put(net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket.class, "screen_handler_slot_update")
+            .put(net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket.class,
+                    "screen_handler_slot_update")
             .put(net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket.class, "entity_status_effect")
             .put(net.minecraft.network.packet.c2s.play.SelectVillagerTradeC2SPacket.class, "select_villager_trade")
             .put(net.minecraft.network.packet.c2s.play.BookUpdateC2SPacket.class, "book_update")
@@ -92,13 +98,16 @@ final class VanillaPacketTypes {
             .put(net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket.LookOnly.class, "player_move_look_only")
             .put(net.minecraft.network.packet.s2c.play.SignEditorOpenS2CPacket.class, "sign_editor_open")
             .put(net.minecraft.network.packet.s2c.play.EntitiesDestroyS2CPacket.class, "entities_destroy")
-            .put(net.minecraft.network.packet.c2s.play.RequestCommandCompletionsC2SPacket.class, "request_command_completions")
+            .put(net.minecraft.network.packet.c2s.play.RequestCommandCompletionsC2SPacket.class,
+                    "request_command_completions")
             .put(net.minecraft.network.packet.c2s.play.HandSwingC2SPacket.class, "hand_swing")
             .put(net.minecraft.network.packet.s2c.play.PlayerListHeaderS2CPacket.class, "player_list_header")
-            .put(net.minecraft.network.packet.s2c.play.ScreenHandlerPropertyUpdateS2CPacket.class, "screen_handler_property_update")
+            .put(net.minecraft.network.packet.s2c.play.ScreenHandlerPropertyUpdateS2CPacket.class,
+                    "screen_handler_property_update")
             .put(net.minecraft.network.packet.s2c.play.SynchronizeRecipesS2CPacket.class, "synchronize_recipes")
             .put(net.minecraft.network.packet.s2c.play.WorldBorderS2CPacket.class, "world_border")
-            .put(net.minecraft.network.packet.s2c.play.ScoreboardObjectiveUpdateS2CPacket.class, "scoreboard_objective_update")
+            .put(net.minecraft.network.packet.s2c.play.ScoreboardObjectiveUpdateS2CPacket.class,
+                    "scoreboard_objective_update")
             .put(net.minecraft.network.packet.c2s.play.ClientSettingsC2SPacket.class, "client_settings")
             .put(net.minecraft.network.packet.s2c.play.EntityPositionS2CPacket.class, "entity_position")
             .put(net.minecraft.network.packet.s2c.play.OpenHorseScreenS2CPacket.class, "open_horse_screen")
@@ -116,8 +125,10 @@ final class VanillaPacketTypes {
             .put(net.minecraft.network.packet.c2s.play.RecipeCategoryOptionsC2SPacket.class, "recipe_category_options")
             .put(net.minecraft.network.packet.s2c.play.MobSpawnS2CPacket.class, "mob_spawn")
             .put(net.minecraft.network.packet.s2c.play.StatisticsS2CPacket.class, "statistics")
-            .put(net.minecraft.network.packet.s2c.play.ChunkRenderDistanceCenterS2CPacket.class, "chunk_render_distance_center")
-            .put(net.minecraft.network.packet.s2c.play.RemoveEntityStatusEffectS2CPacket.class, "remove_entity_status_effect")
+            .put(net.minecraft.network.packet.s2c.play.ChunkRenderDistanceCenterS2CPacket.class,
+                    "chunk_render_distance_center")
+            .put(net.minecraft.network.packet.s2c.play.RemoveEntityStatusEffectS2CPacket.class,
+                    "remove_entity_status_effect")
             .put(net.minecraft.network.packet.s2c.query.QueryPongS2CPacket.class, "query_pong")
             .put(net.minecraft.network.packet.s2c.query.QueryResponseS2CPacket.class, "query_response")
             .put(net.minecraft.network.packet.c2s.play.JigsawGeneratingC2SPacket.class, "jigsaw_generating")
@@ -162,10 +173,12 @@ final class VanillaPacketTypes {
             .put(net.minecraft.network.packet.s2c.play.PlayerSpawnS2CPacket.class, "player_spawn")
             .put(net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket.class, "player_interact_entity")
             .put(net.minecraft.network.packet.c2s.login.LoginHelloC2SPacket.class, "login_hello")
-            .put(net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket.PositionOnly.class, "player_move_position_only")
+            .put(net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket.PositionOnly.class,
+                    "player_move_position_only")
             .put(net.minecraft.network.packet.c2s.play.QueryEntityNbtC2SPacket.class, "query_entity_nbt")
             .put(net.minecraft.network.packet.c2s.play.PickFromInventoryC2SPacket.class, "pick_from_inventory")
-            .put(net.minecraft.network.packet.c2s.play.UpdateCommandBlockMinecartC2SPacket.class, "update_command_block_minecart")
+            .put(net.minecraft.network.packet.c2s.play.UpdateCommandBlockMinecartC2SPacket.class,
+                    "update_command_block_minecart")
             .put(net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket.class, "play_sound")
             .put(net.minecraft.network.packet.s2c.play.AdvancementUpdateS2CPacket.class, "advancement_update")
             .put(net.minecraft.network.packet.s2c.play.ChunkLoadDistanceS2CPacket.class, "chunk_load_distance")

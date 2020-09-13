@@ -54,11 +54,11 @@ spotless {
         indentWithSpaces()
         eclipse().configFile 'codeformat/codeformat.xml'
     }
-    format 'json', {
-        target '**/*.json'
-        targetExclude 'src/generated/resources/**'
-        prettier().config(['parser': 'json'])
-    }
+    //format 'json', {
+    //    target '**/*.json'
+    //   targetExclude 'src/generated/resources/**'
+    //    prettier().config(['parser': 'json'])
+    //}
 }
 
 // configure the maven publication

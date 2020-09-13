@@ -35,8 +35,10 @@ public final class Metrics {
             Method supportsApiVersionMethod = apiBindingClass.getMethod("supportsApiVersion", int.class);
             IntStream supportedVersions = IntStream.of((int[]) supportsApiVersionMethod.invoke(null, API_VERSION));
             if (supportedVersions.noneMatch(v -> v == API_VERSION)) {
-                String supportedVersionsString = supportedVersions.mapToObj(String::valueOf).collect(Collectors.joining(", "));
-                throw new Exception("This API version " + API_VERSION + " is not supported by the metrics mod that is present: " + supportedVersionsString);
+                String supportedVersionsString = supportedVersions.mapToObj(String::valueOf)
+                        .collect(Collectors.joining(", "));
+                throw new Exception("This API version " + API_VERSION
+                        + " is not supported by the metrics mod that is present: " + supportedVersionsString);
             }
         }
 

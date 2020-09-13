@@ -3,8 +3,8 @@ package io.github.appliedenergistics.metrics.core;
 import io.micrometer.core.instrument.MeterRegistry;
 
 /**
- * This class is loaded by  {@link io.github.appliedenergistics.metrics.api.Metrics} via
- * reflection.
+ * This class is loaded by
+ * {@link io.github.appliedenergistics.metrics.api.Metrics} via reflection.
  */
 public final class ApiBinding {
 

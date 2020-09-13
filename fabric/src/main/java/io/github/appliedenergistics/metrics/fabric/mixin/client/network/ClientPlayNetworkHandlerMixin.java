@@ -15,10 +15,12 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public class ClientPlayNetworkHandlerMixin {
 
     /**
-     * We're injecting this early beacuse Fabric's Mixin will cancel the method and cause us to not measure the packet.
+     * We're injecting this early beacuse Fabric's Mixin will cancel the method and
+     * cause us to not measure the packet.
      */
     @Inject(method = "onBlockEntityUpdate", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/world/ClientWorld;getBlockEntity(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/entity/BlockEntity;", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onBlockEntityUpdate(BlockEntityUpdateS2CPacket packet, CallbackInfo ci, BlockPos blockPos, BlockEntity blockEntity) {
+    public void onBlockEntityUpdate(BlockEntityUpdateS2CPacket packet, CallbackInfo ci, BlockPos blockPos,
+            BlockEntity blockEntity) {
         PacketMetrics.recordIncomingBlockEntityUpdate(blockEntity, packet);
     }
 

@@ -28,10 +28,12 @@ public class PacketDeflaterMixin {
     private int initialOutputSize;
 
     /**
-     * Records the size of the input, and potential size of existing data in the output
+     * Records the size of the input, and potential size of existing data in the
+     * output
      */
     @Inject(method = "encode", at = @At("HEAD"))
-    public void onEncodeStart(ChannelHandlerContext channelHandlerContext, ByteBuf input, ByteBuf output, CallbackInfo ci) {
+    public void onEncodeStart(ChannelHandlerContext channelHandlerContext, ByteBuf input, ByteBuf output,
+            CallbackInfo ci) {
         this.inputSize = input.readableBytes();
         this.initialOutputSize = output.readableBytes();
     }
@@ -40,7 +42,8 @@ public class PacketDeflaterMixin {
      * Records the size of the input, and potential data in the output
      */
     @Inject(method = "encode", at = @At("HEAD"))
-    public void onEncodeEnd(ChannelHandlerContext channelHandlerContext, ByteBuf input, ByteBuf output, CallbackInfo ci) {
+    public void onEncodeEnd(ChannelHandlerContext channelHandlerContext, ByteBuf input, ByteBuf output,
+            CallbackInfo ci) {
         int finalOutputSize = output.readableBytes() - this.initialOutputSize;
         boolean compressed = this.inputSize >= this.compressionThreshold;
         if (compressed) {

@@ -10,9 +10,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 /**
- * We mix this into the block entity update packet because the on-wire
- * type is only used as a hint to drop update packets when they don't
- * match the block-entity at the target location.
+ * We mix this into the block entity update packet because the on-wire type is
+ * only used as a hint to drop update packets when they don't match the
+ * block-entity at the target location.
  */
 @Mixin(BlockEntityUpdateS2CPacket.class)
 public class BlockEntityUpdateS2CPacketMixin implements PacketSize, BlockEntityTypeHolder {

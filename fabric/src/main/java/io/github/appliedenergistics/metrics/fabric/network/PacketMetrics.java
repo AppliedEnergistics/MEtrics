@@ -76,14 +76,16 @@ public class PacketMetrics {
         DistributionSummary summary;
 
         if (packet instanceof CustomPayloadS2CPacket) {
-            // Since we're in the _encoder_, we assume that the identifier is set since this should be serverbound
+            // Since we're in the _encoder_, we assume that the identifier is set since this
+            // should be serverbound
             Identifier channel = ((CustomPayloadS2CPacketAccessor) packet).metrics_getChannel();
             if (channel == null) {
                 return; // Cannot record this, server sending a client->server packet ???
             }
             summary = outgoingModdedTypeMetrics.computeIfAbsent(channel, PacketMetrics::createOutgoingMetric);
         } else if (packet instanceof CustomPayloadC2SPacket) {
-            // Since we're in the _encoder_, we assume that the identifier is set since this should be serverbound
+            // Since we're in the _encoder_, we assume that the identifier is set since this
+            // should be serverbound
             Identifier channel = ((CustomPayloadC2SPacketAccessor) packet).metrics_getChannel();
             if (channel == null) {
                 return; // Cannot record this, server sending a client->server packet ???
@@ -91,7 +93,8 @@ public class PacketMetrics {
 
             summary = outgoingModdedTypeMetrics.computeIfAbsent(channel, PacketMetrics::createOutgoingMetric);
         } else {
-            summary = outgoingVanillaTypeMetrics.computeIfAbsent(packet.getClass(), PacketMetrics::createOutgoingMetric);
+            summary = outgoingVanillaTypeMetrics.computeIfAbsent(packet.getClass(),
+                    PacketMetrics::createOutgoingMetric);
         }
 
         summary.record(uncompressedSize);
@@ -128,21 +131,24 @@ public class PacketMetrics {
     };
 
     public static void recordIncoming(Packet<?> packet, int uncompressedSize) {
-        // Record the current packet size in case later handlers can get a more detailed sub-type
+        // Record the current packet size in case later handlers can get a more detailed
+        // sub-type
         if (packet instanceof PacketSize) {
             ((PacketSize) packet).metrics_setUncompressedSize(uncompressedSize);
         }
 
         DistributionSummary summary;
         if (packet instanceof CustomPayloadS2CPacket) {
-            // Since we're in the _encoder_, we assume that the identifier is set since this should be serverbound
+            // Since we're in the _encoder_, we assume that the identifier is set since this
+            // should be serverbound
             Identifier channel = ((CustomPayloadS2CPacketAccessor) packet).metrics_getChannel();
             if (channel == null) {
                 return; // Cannot record this, server sending a client->server packet ???
             }
             summary = incomingModdedTypeMetrics.computeIfAbsent(channel, PacketMetrics::createIncomingMetric);
         } else if (packet instanceof CustomPayloadC2SPacket) {
-            // Since we're in the _encoder_, we assume that the identifier is set since this should be serverbound
+            // Since we're in the _encoder_, we assume that the identifier is set since this
+            // should be serverbound
             Identifier channel = ((CustomPayloadC2SPacketAccessor) packet).metrics_getChannel();
             if (channel == null) {
                 return; // Cannot record this, server sending a client->server packet ???
@@ -150,7 +156,8 @@ public class PacketMetrics {
 
             summary = incomingModdedTypeMetrics.computeIfAbsent(channel, PacketMetrics::createIncomingMetric);
         } else {
-            summary = incomingVanillaTypeMetrics.computeIfAbsent(packet.getClass(), PacketMetrics::createIncomingMetric);
+            summary = incomingVanillaTypeMetrics.computeIfAbsent(packet.getClass(),
+                    PacketMetrics::createIncomingMetric);
         }
 
         summary.record(uncompressedSize);

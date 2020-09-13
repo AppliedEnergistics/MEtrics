@@ -16,8 +16,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * This mixin will run right before {@link Bootstrap#initialize()} does, and captures the game directory
- * to initialize the metrics subsystems before any constructors are run.
+ * This mixin will run right before {@link Bootstrap#initialize()} does, and
+ * captures the game directory to initialize the metrics subsystems before any
+ * constructors are run.
  */
 @Mixin(Main.class)
 public class ServerStartupMixin {
@@ -27,7 +28,8 @@ public class ServerStartupMixin {
         // The client uses this option to determine where the game is
         OptionSpec<String> gameDirArg = optionParser.accepts("universe").withRequiredArg().defaultsTo(".");
 
-        // We have to reparse the args, otherwise we'd need to capture all the options locally, which sucks
+        // We have to reparse the args, otherwise we'd need to capture all the options
+        // locally, which sucks
         OptionSet optionSet = optionParser.parse(args);
         Path gameDir = Paths.get(optionSet.valueOf(gameDirArg)).toAbsolutePath();
 

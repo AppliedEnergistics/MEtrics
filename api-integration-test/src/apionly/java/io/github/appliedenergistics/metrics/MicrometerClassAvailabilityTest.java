@@ -16,7 +16,8 @@ public class MicrometerClassAvailabilityTest {
      */
     @Test
     void testSimpleRegistryIsMissing() {
-        assertThrows(ClassNotFoundException.class, () -> Class.forName("io.micrometer.core.instrument.simple.SimpleMeterRegistry"));
+        assertThrows(ClassNotFoundException.class,
+                () -> Class.forName("io.micrometer.core.instrument.simple.SimpleMeterRegistry"));
     }
 
     /**
@@ -30,7 +31,8 @@ public class MicrometerClassAvailabilityTest {
         Path jarPath = Paths.get(jarUrl.toURI());
         String filename = jarPath.getFileName().toString();
 
-        // assert that it is actually from our shaded jar and not some accidental transitive dependency
+        // assert that it is actually from our shaded jar and not some accidental
+        // transitive dependency
         assertTrue(filename.startsWith("api-"));
         assertTrue(filename.endsWith("-all.jar"));
     }

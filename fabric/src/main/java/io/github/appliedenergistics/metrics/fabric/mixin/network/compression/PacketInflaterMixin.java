@@ -26,7 +26,8 @@ public class PacketInflaterMixin {
      * Records the size of the original packet.
      */
     @Inject(method = "decode", at = @At("HEAD"))
-    public void onDecodeStart(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list, CallbackInfo ci) {
+    public void onDecodeStart(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list,
+            CallbackInfo ci) {
         this.inputSize = byteBuf.readableBytes();
     }
 

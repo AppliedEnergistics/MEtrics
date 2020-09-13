@@ -4,8 +4,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 /**
- * This interface is mixed into the block entity update packet to record which block entity is
- * at the updated location before then recording the serialized size in the network thread.
+ * This interface is mixed into the block entity update packet to record which
+ * block entity is at the updated location before then recording the serialized
+ * size in the network thread.
  *
  * @see net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
  */

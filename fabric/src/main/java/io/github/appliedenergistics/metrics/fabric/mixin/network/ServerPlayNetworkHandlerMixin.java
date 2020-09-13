@@ -14,9 +14,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * This Mixin can record certain world-related information about a packet before it is being sent off to the client.
+ * This Mixin can record certain world-related information about a packet before
+ * it is being sent off to the client.
  * <p>
- * This records the type of a block entity that triggered a block entity update, for example.
+ * This records the type of a block entity that triggered a block entity update,
+ * for example.
  */
 @Mixin(ServerPlayNetworkHandler.class)
 public class ServerPlayNetworkHandlerMixin {

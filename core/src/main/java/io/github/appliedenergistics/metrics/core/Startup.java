@@ -6,6 +6,12 @@ import java.nio.file.Path;
 import java.util.Properties;
 
 import io.micrometer.core.instrument.Metrics;
+import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics;
+import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics;
+import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics;
+import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics;
+import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
+import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
 
 public final class Startup {
 
@@ -13,6 +19,9 @@ public final class Startup {
     private static final String METRICS_DIRECTORY = "metrics";
     private static final String SERVER_CONFIG_FILE = "server.properties";
     private static final String CLIENT_CONFIG_FILE = "client.properties";
+
+    private static final String GLOBAL_ENABLED = "enabled";
+    private static final String GLOBAL_JVM_METRICS = "jvm";
 
     private static boolean initialized = false;
 
@@ -27,8 +36,18 @@ public final class Startup {
 
         Properties config = loadConfig(client, gameDir);
 
-        InfluxFactory.init(client, config).map(Metrics.globalRegistry::add);
-        PrometheusFactory.init(client, config).map(Metrics.globalRegistry::add);
+        boolean enabled = Boolean.parseBoolean(config.getProperty(GLOBAL_ENABLED, "false"));
+        boolean jvmMetrics = Boolean.parseBoolean(config.getProperty(GLOBAL_JVM_METRICS, "false"));
+
+        if (enabled) {
+            InfluxFactory.init(client, config).map(Metrics.globalRegistry::add);
+            PrometheusFactory.init(client, config).map(Metrics.globalRegistry::add);
+        }
+
+        if (enabled && jvmMetrics) {
+            addJVMMetrics(Metrics.globalRegistry);
+        }
+
     }
 
     private static Properties loadConfig(boolean client, Path gameDir) {
@@ -77,6 +96,15 @@ public final class Startup {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static void addJVMMetrics(CompositeMeterRegistry registry) {
+        new ClassLoaderMetrics().bindTo(registry);
+        new JvmMemoryMetrics().bindTo(registry);
+        new JvmGcMetrics().bindTo(registry);
+        new ClassLoaderMetrics().bindTo(registry);
+        new ProcessorMetrics().bindTo(registry);
+        new JvmThreadMetrics().bindTo(registry);
     }
 
 }

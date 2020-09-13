@@ -16,8 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * This test will try to register every possible type of metric with just the API present on the class-path
- * to ensure our Jar shading does not miss any required dependencies.
+ * This test will try to register every possible type of metric with just the
+ * API present on the class-path to ensure our Jar shading does not miss any
+ * required dependencies.
  */
 public class MeterTest {
 
@@ -107,7 +108,8 @@ public class MeterTest {
 
     @Test
     void testFunctionTimer() {
-        FunctionTimer funcTimer = FunctionTimer.builder("my-function-timer", this, mt -> 123, mt -> 123, TimeUnit.SECONDS)
+        FunctionTimer funcTimer = FunctionTimer
+                .builder("my-function-timer", this, mt -> 123, mt -> 123, TimeUnit.SECONDS)
                 .description("some description")
                 .tag("tag1", "value")
                 .register(Metrics.registry());
