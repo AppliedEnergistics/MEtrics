@@ -4,6 +4,7 @@ plugins {
     id 'net.minecrell.licenser' version '0.4.1'
     id 'fabric-loom' version '0.5.25' apply false
     id 'com.github.johnrengelman.shadow' version '4.0.0' apply false
+    id "com.diffplug.gradle.spotless" version "4.3.0"
 }
 
 // Create version number
@@ -17,15 +18,9 @@ if (ext.branch) {
     version = version + "+branch." + ext.branch
 }
 
-ext.tag = System.getenv('TAG') ?: ""
-if (ext.tag && ext.tag.startsWith("fabric/v")) {
-    version = ext.tag.substring("fabric/v".length())
-    // Validate that the rest is a semver version
-    if (version ==~ /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/) {
-        println("::set-env name=VERSION::${version}")
-    } else {
-        throw new GradleException("Invalid semver: $version")
-    }
+ext.release = System.getenv('RELEASE') ?: ""
+if (ext.release) {
+  version = ext.release
 }
 
 // Maven group and artifact name
@@ -52,25 +47,27 @@ subprojects {
     }
 }
 
+spotless {
+    java {
+        target '**/*.java'
+
+        indentWithSpaces()
+        eclipse().configFile 'codeformat/codeformat.xml'
+    }
+    format 'json', {
+        target '**/*.json'
+        targetExclude 'src/generated/resources/**'
+        prettier().config(['parser': 'json'])
+    }
+}
+
 // configure the maven publication
 publishing {
-    if (!version.endsWith("-SNAPSHOT")) {
-        publications {
-            maven(MavenPublication) {
-                groupId = project.group
-                artifactId = 'appliedenergistics2-fabric'
-                version = project.version
-
-                // add all the jars that should be included when publishing to maven
-                artifact(remapJar) {
-                    builtBy remapJar
-                }
-                artifact(sourcesJar) {
-                    builtBy remapSourcesJar
-                }
-                artifact javadocJar
-                artifact apiJar
-            }
+    publications {
+        maven(MavenPublication) {
+            groupId = project.group
+            artifactId = project.archivesBaseName
+            version = project.version
         }
     }
     repositories {
@@ -80,16 +77,7 @@ publishing {
                 password System.getenv("GITHUB_TOKEN")
             }
             name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/AppliedEnergistics/Applied-Energistics-2"
-        }
-        maven {
-            credentials {
-                username System.getenv("MODMAVEN_USER")
-                password System.getenv("MODMAVEN_PASSWORD")
-            }
-            name = "modmaven"
-            url = "https://modmaven.k-4u.nl/artifactory/local-releases/"
+            url = "https://maven.pkg.github.com/AppliedEnergistics/MEtrics"
         }
     }
-
 }
