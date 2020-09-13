@@ -28,9 +28,9 @@ jobs:
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
-        name: failure-reports
-        path: |
-          **/build/reports/tests/*
+          name: failure-reports
+          path: |
+            **/build/reports/tests/*
       - uses: actions/upload-artifact@v2
         with:
           name: master-snapshot
