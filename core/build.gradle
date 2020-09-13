@@ -5,3 +5,11 @@ dependencies {
     compile "io.micrometer:micrometer-registry-prometheus:${micrometer_version}"
     compile "io.micrometer:micrometer-registry-influx:${micrometer_version}"
 }
+
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
