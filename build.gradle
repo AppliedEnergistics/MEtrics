@@ -1,10 +1,16 @@
-
 plugins {
     id 'maven-publish'
     id 'net.minecrell.licenser' version '0.4.1'
     id 'fabric-loom' version '0.5.25' apply false
     id 'com.github.johnrengelman.shadow' version '4.0.0' apply false
     id "com.diffplug.gradle.spotless" version "4.3.0"
+}
+
+repositories {
+    maven { // modmaven, maven proxy
+        name 'modmaven'
+        url "https://modmaven.k-4u.nl/"
+    }
 }
 
 // Create version number
@@ -24,7 +30,8 @@ if (ext.release) {
 }
 
 // Maven group and artifact name
-group = 'io.github.appliedenergistics'
+group = artifact_group
+archivesBaseName = artifact_basename
 
 subprojects {
     apply plugin: 'java'
@@ -33,6 +40,9 @@ subprojects {
         mavenLocal()
         mavenCentral()
     }
+
+    version = parent.version
+    archivesBaseName = parent.archivesBaseName + "-" + name
 
     sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
     compileJava {
