@@ -42,7 +42,7 @@ subprojects {
     }
 
     group = parent.group
-    archivesBaseName = parent.archivesBaseName + "-" + name
+    archivesBaseName = name
     version = parent.version
 
     sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
@@ -95,6 +95,10 @@ subprojects {
 }
 
 publishing {
+    publications {
+        maven(MavenPublication) {
+        }
+    }
     repositories {
         maven {
             credentials {
