@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.appliedenergistics.metrics.forge.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "startup.ClientStartupMixin",
+  ],
+  "server": [
+    "startup.ServerStartupMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

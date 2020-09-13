@@ -1,0 +1,15 @@
+modLoader="javafml"
+loaderVersion="[33,)"
+license="LGPL 2.1"
+issueTrackerURL="https://github.com/AppliedEnergistics/MEtrics/issues"
+[[mods]]
+modId="metrics"
+version="${file.jarVersion}"
+displayName="MEtrics"
+#updateJSONURL=""
+displayURL="https://github.com/AppliedEnergistics/MEtrics"
+logoFile="metrics.png"
+credits=""
+authors="TeamAppliedEnergistics"
+description='''
+Experimental metrics for AE2 and maybe more'''
