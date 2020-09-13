@@ -33,8 +33,8 @@ public class MicrometerClassAvailabilityTest {
 
         // assert that it is actually from our shaded jar and not some accidental
         // transitive dependency
-        assertTrue(filename.startsWith("api-"));
-        assertTrue(filename.endsWith("-all.jar"));
+        assertTrue(filename.startsWith("api-"), "Expected name to start with api-: " + filename);
+        assertTrue(filename.endsWith("-all.jar"), "Expected name to end with -all.jar:" + filename);
     }
 
 }
