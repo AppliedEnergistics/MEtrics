@@ -27,7 +27,7 @@ jobs:
       - name: Publish to github packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew publishMavenPublicationToGitHubPackagesRepository --no-daemon --max-workers 1
+        run: ./gradlew publish --no-daemon --max-workers 1
       - name: Prepare artifact metadata
         id: prepare_artifact_metadata
         run: |
