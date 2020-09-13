@@ -30,3 +30,13 @@ build
 .idea
 *.ipw
 *.ipr
+
+# eclipse
+.project
+.metadata
+.classpath
+.settings/
+bin/
+
+# Explicit ignores
+Thumbs.db
