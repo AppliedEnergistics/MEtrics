@@ -1,0 +1,77 @@
+name: 'Release'
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate semver
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          echo $TAG | grep -oP '^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
+          echo "::set-env name=RELEASE::${TAG:1}"
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew build --no-daemon --max-workers 1
+      - name: Publish to github packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew publishMavenPublicationToGitHubPackagesRepository --no-daemon --max-workers 1
+      - name: Prepare artifact metadata
+        id: prepare_artifact_metadata
+        run: |
+          echo ::set-output name=API_ARTIFACT_PATH::./api/build/libs/metrics-api-${RELEASE}.jar
+          echo ::set-output name=API_ARTIFACT_NAME::metrics-api-${RELEASE}.jar
+          echo ::set-output name=CORE_ARTIFACT_PATH::./core/build/libs/metrics-core-${RELEASE}.jar
+          echo ::set-output name=CORE_ARTIFACT_NAME::metrics-core-${RELEASE}.jar
+          echo ::set-output name=FABRIC_ARTIFACT_PATH::./fabric/build/libs/metrics-fabric-${RELEASE}.jar
+          echo ::set-output name=FABRIC_ARTIFACT_NAME::metrics-fabric-${RELEASE}.jar
+          echo ::set-output name=FORGE_ARTIFACT_PATH::./forge/build/libs/metrics-forge-${RELEASE}.jar
+          echo ::set-output name=FORGE_ARTIFACT_NAME::metrics-forge-${RELEASE}.jar
+      - name: Upload API Release Artifact
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.prepare_artifact_metadata.outputs.API_ARTIFACT_PATH }}
+          asset_name: ${{ steps.prepare_artifact_metadata.outputs.API_ARTIFACT_NAME }}
+          asset_content_type: application/zip
+      - name: Upload Core Release Artifact
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.prepare_artifact_metadata.outputs.CORE_ARTIFACT_PATH }}
+          asset_name: ${{ steps.prepare_artifact_metadata.outputs.CORE_ARTIFACT_NAME }}
+          asset_content_type: application/zip
+      - name: Upload Fabric Release Artifact
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.prepare_artifact_metadata.outputs.FABRIC_ARTIFACT_PATH }}
+          asset_name: ${{ steps.prepare_artifact_metadata.outputs.FABRIC_ARTIFACT_NAME }}
+          asset_content_type: application/zip
+      - name: Upload Forge Release Artifact
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.prepare_artifact_metadata.outputs.FORGE_ARTIFACT_PATH }}
+          asset_name: ${{ steps.prepare_artifact_metadata.outputs.FORGE_ARTIFACT_NAME }}
+          asset_content_type: application/zip

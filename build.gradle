@@ -41,8 +41,9 @@ subprojects {
         mavenCentral()
     }
 
-    version = parent.version
+    group = parent.group
     archivesBaseName = parent.archivesBaseName + "-" + name
+    version = parent.version
 
     sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
     compileJava {
@@ -54,6 +55,52 @@ subprojects {
     compileJava.options.encoding = 'UTF-8'
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
+    }
+
+    javadoc {
+        classpath = sourceSets.main.compileClasspath
+        source = sourceSets.main.java
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.encoding = 'UTF-8'
+        options.charSet = 'UTF-8'
+    }
+
+    task javadocJar(type: Jar) {
+        from javadoc
+        classifier = "javadoc"
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = "sources"
+        from sourceSets.main.allJava
+    }
+
+    artifacts {
+        archives javadocJar
+        archives sourcesJar
+    }
+
+    publishing {
+        if(["api", "core", "fabric", "forge"].contains(project.name)) {
+            publications {
+                "$project.name"(MavenPublication) {
+                    groupId project.group
+                    artifactId project.name
+                    version project.version
+                    from components.java
+                }
+            }
+            repositories {
+                maven {
+                    credentials {
+                        username System.getenv("GITHUB_ACTOR")
+                        password System.getenv("GITHUB_TOKEN")
+                    }
+                    name = "GitHubPackages"
+                    url = "https://maven.pkg.github.com/AppliedEnergistics/MEtrics"
+                }
+            }
+        }
     }
 }
 
@@ -69,25 +116,4 @@ spotless {
     //   targetExclude 'src/generated/resources/**'
     //    prettier().config(['parser': 'json'])
     //}
-}
-
-// configure the maven publication
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = project.group
-            artifactId = project.archivesBaseName
-            version = project.version
-        }
-    }
-    repositories {
-        maven {
-            credentials {
-                username System.getenv("GITHUB_ACTOR")
-                password System.getenv("GITHUB_TOKEN")
-            }
-            name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/AppliedEnergistics/MEtrics"
-        }
-    }
 }

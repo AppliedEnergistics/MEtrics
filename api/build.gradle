@@ -6,12 +6,13 @@ dependencies {
 
 shadowJar {
     minimize()
+    classifier ""
     exclude '**/package-info.class'
 }
 
 artifacts {
     archives(shadowJar) {
-        classifier 'shadow'
+        classifier ''
         builtBy shadowJar
     }
 }
