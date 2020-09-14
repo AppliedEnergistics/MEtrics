@@ -18,9 +18,9 @@ import net.minecraft.server.Main;
 import net.minecraft.util.registry.Bootstrap;
 
 /**
- * This mixin will run right before {@link Bootstrap#initialize()} does, and
- * captures the game directory to initialize the metrics subsystems before any
- * constructors are run.
+ * This mixin will run right after {@link CrashReport#func_230188_h_()} does,
+ * and captures the game directory to initialize the metrics subsystems before
+ * any constructors are run.
  */
 @Mixin(Main.class)
 public class ServerStartupMixin {

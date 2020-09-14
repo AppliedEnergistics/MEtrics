@@ -26,6 +26,7 @@ sourceSets {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
     implementation project(':core')
     shadow project(':core')
 }

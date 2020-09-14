@@ -2,7 +2,7 @@ plugins {
     id 'maven-publish'
     id 'net.minecrell.licenser' version '0.4.1'
     id 'fabric-loom' version '0.5.25' apply false
-    id 'com.github.johnrengelman.shadow' version '4.0.0' apply false
+    id 'com.github.johnrengelman.shadow' version '5.2.0' apply false
     id "com.diffplug.gradle.spotless" version "4.3.0"
 }
 
@@ -95,10 +95,6 @@ subprojects {
 }
 
 publishing {
-    publications {
-        maven(MavenPublication) {
-        }
-    }
     repositories {
         maven {
             credentials {

@@ -9,10 +9,3 @@ shadowJar {
     classifier ""
     exclude '**/package-info.class'
 }
-
-artifacts {
-    archives(shadowJar) {
-        classifier ''
-        builtBy shadowJar
-    }
-}
