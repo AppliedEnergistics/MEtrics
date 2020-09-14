@@ -81,7 +81,7 @@ subprojects {
     }
 
     publishing {
-        if(["api", "core", "fabric", "forge"].contains(project.name)) {
+        if(["api", "fabric", "forge"].contains(project.name)) {
             publications {
                 "$project.name"(MavenPublication) {
                     groupId project.group
