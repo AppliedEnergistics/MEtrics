@@ -31,13 +31,13 @@ jobs:
       - name: Prepare artifact metadata
         id: prepare_artifact_metadata
         run: |
-          echo ::set-output name=API_ARTIFACT_PATH::./api/build/libs/metrics-api-${RELEASE}.jar
+          echo ::set-output name=API_ARTIFACT_PATH::./api/build/libs/api-${RELEASE}.jar
           echo ::set-output name=API_ARTIFACT_NAME::metrics-api-${RELEASE}.jar
-          echo ::set-output name=CORE_ARTIFACT_PATH::./core/build/libs/metrics-core-${RELEASE}.jar
+          echo ::set-output name=CORE_ARTIFACT_PATH::./core/build/libs/core-${RELEASE}.jar
           echo ::set-output name=CORE_ARTIFACT_NAME::metrics-core-${RELEASE}.jar
-          echo ::set-output name=FABRIC_ARTIFACT_PATH::./fabric/build/libs/metrics-fabric-${RELEASE}.jar
+          echo ::set-output name=FABRIC_ARTIFACT_PATH::./fabric/build/libs/fabric-${RELEASE}.jar
           echo ::set-output name=FABRIC_ARTIFACT_NAME::metrics-fabric-${RELEASE}.jar
-          echo ::set-output name=FORGE_ARTIFACT_PATH::./forge/build/libs/metrics-forge-${RELEASE}.jar
+          echo ::set-output name=FORGE_ARTIFACT_PATH::./forge/build/libs/forge-${RELEASE}.jar
           echo ::set-output name=FORGE_ARTIFACT_NAME::metrics-forge-${RELEASE}.jar
       - name: Upload API Release Artifact
         uses: actions/upload-release-asset@v1.0.1
@@ -75,3 +75,8 @@ jobs:
           asset_path: ${{ steps.prepare_artifact_metadata.outputs.FORGE_ARTIFACT_PATH }}
           asset_name: ${{ steps.prepare_artifact_metadata.outputs.FORGE_ARTIFACT_NAME }}
           asset_content_type: application/zip
+      - name: Upload to curseforge
+        env:
+          CHANGELOG: ${{ github.event.release.body }}
+          CURSEFORGE: ${{ secrets.CURSEFORGE }}
+        run: ./gradlew curseforge --no-daemon --max-workers 1

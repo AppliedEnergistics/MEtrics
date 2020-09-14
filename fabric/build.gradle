@@ -1,5 +1,6 @@
 apply plugin: 'fabric-loom'
 apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: 'com.matthewprenger.cursegradle'
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.fabric_minecraft_version}"
@@ -25,3 +26,36 @@ remapJar {
     getInput().set(shadowJar.getArchivePath());
 }
 remapJar.dependsOn shadowJar
+
+def isAlpha = project.version.contains("alpha")
+def isBeta = project.version.contains("beta")
+
+def cfReleaseType = "release"
+if (isAlpha) {
+  cfReleaseType = "alpha"
+} else if (isBeta) {
+  cfReleaseType = "beta"
+}
+
+if (System.getenv("CURSEFORGE") && !version.endsWith("-SNAPSHOT")) {
+    curseforge {
+        apiKey = System.getenv("CURSEFORGE")
+        project {
+            id = project.curseforge_project
+            changelogType = "markdown"
+            changelog = System.getenv("CHANGELOG") ?: "Please visit our [releases](https://github.com/AppliedEnergistics/MEtrics/releases) for a changelog"
+            releaseType = cfReleaseType
+            addGameVersion project.minecraft_version
+            addGameVersion "Fabric"
+            mainArtifact(remapJar.archiveFile) {
+                displayName = "MEtrics ${project.version} [FABRIC]"
+            }
+        }
+        options {
+            forgeGradleIntegration = false
+        }
+        afterEvaluate {
+            tasks.getByName("curseforge${project.curseforge_project}").dependsOn remapJar
+        }
+    }
+}
