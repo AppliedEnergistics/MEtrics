@@ -22,7 +22,7 @@ The idea was to have a companion mod for [Applied Energistics 2](https://github.
   - [![License](https://img.shields.io/badge/License-MIT-red.svg?style=flat-square)](http://opensource.org/licenses/MIT)
 * MEtrics
   - (c) 2020 Team AppliedEnergistics et al
-  - [![License](https://img.shields.io/badge/License-LGPLv3-blue.svg?style=flat-square)](https://github.com/AppliedEnergistics/MEtrics/blob/master/LICENSE)
+  - [![License](https://img.shields.io/github/license/AppliedEnergistics/MEtrics?style=flat-square)](https://github.com/AppliedEnergistics/MEtrics/blob/master/LICENSE)
 * Micrometer
   - The metrics API we use internally.
   - [![License](https://img.shields.io/github/license/micrometer-metrics/micrometer?style=flat-square)](https://github.com/micrometer-metrics/micrometer/blob/master/LICENSE)
