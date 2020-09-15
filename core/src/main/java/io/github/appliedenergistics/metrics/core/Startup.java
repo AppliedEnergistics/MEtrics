@@ -102,7 +102,6 @@ public final class Startup {
         new ClassLoaderMetrics().bindTo(registry);
         new JvmMemoryMetrics().bindTo(registry);
         new JvmGcMetrics().bindTo(registry);
-        new ClassLoaderMetrics().bindTo(registry);
         new ProcessorMetrics().bindTo(registry);
         new JvmThreadMetrics().bindTo(registry);
     }
